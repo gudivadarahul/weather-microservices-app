@@ -146,7 +146,97 @@ _To be written_
 
 ## CI/CD Pipelines
 
-_To be written_
+### Currently Working On...
+
+To streamline your development process and ensure that changes to your frontend and backend are automatically tested and deployed without manual intervention, you can set up a CI/CD pipeline using AWS CodePipeline, CodeBuild, and other AWS services. Here’s how you can achieve this:
+
+### Step 1: Set Up a CI/CD Pipeline
+
+#### Use AWS CodePipeline
+
+AWS CodePipeline automates the build, test, and deployment phases of your release process:
+
+- **Pipeline Setup**: Create a new pipeline that triggers whenever there are changes to your GitHub repository (frontend or backend).
+
+#### Configure AWS CodeBuild
+
+Use AWS CodeBuild to automatically build your frontend and backend, ensuring that your code is tested and validated before deployment.
+
+- **For the Frontend**:
+  - Install dependencies.
+  - Run tests (e.g., using a testing framework like Jest for React).
+  - Build the static assets (e.g., using `npm run build`).
+  - Upload the built assets to S3.
+- **For the Backend**:
+  - Build the Docker image.
+  - Run tests (e.g., unit tests, integration tests).
+  - Push the Docker image to AWS Elastic Container Registry (ECR).
+
+#### Deploy Automatically
+
+- **For the Frontend**:
+
+  - After a successful build, deploy static files to AWS S3.
+  - Invalidate the CloudFront cache to ensure the latest files are served to users.
+
+- **For the Backend**:
+
+  - After pushing the Docker image to ECR, configure AWS ECS to automatically update the running service with the new image.
+
+- **For the API Gateway**:
+  - Use AWS CloudFormation or Terraform to automatically apply any changes to API Gateway configurations.
+
+### Step 2: Automate the Process
+
+#### Automate S3 Deployment
+
+- Use AWS CodePipeline to automate the deployment of frontend assets to S3 after a successful build, eliminating the need for manual uploads.
+
+#### Automate ECS Deployment
+
+- Configure the ECS service to automatically pull the latest Docker image from ECR once updated.
+
+#### Automate API Gateway Updates
+
+- Use Infrastructure as Code (IaC) tools like AWS CloudFormation or Terraform to manage API Gateway configurations. Ensure that API Gateway updates are included in your CI/CD pipeline so changes are applied automatically.
+
+### Step 3: Test the Changes
+
+#### Run Automated Tests
+
+- Run automated tests for both frontend and backend before deployment. This ensures that errors are caught early and prevents breaking changes from being deployed.
+
+#### Set Up Staging Environments
+
+- Deploy your changes to a staging environment before going live. This allows you to test the entire flow (frontend, backend, API Gateway) in an environment similar to production.
+
+### Step 4: Monitor and Rollback
+
+#### Monitor Deployments
+
+- Use AWS CloudWatch to monitor deployments and ensure everything is working as expected. Set up alerts for any errors or issues during the deployment process.
+
+#### Rollback Strategy
+
+- In case of deployment failures, configure the pipeline to automatically rollback to the previous stable version.
+
+### Example Workflow
+
+1. **Commit Changes**: Changes are committed to GitHub (frontend or backend).
+2. **Trigger Pipeline**: AWS CodePipeline triggers the build process:
+   - CodeBuild runs tests and builds the project.
+   - Docker image is built and pushed to ECR for the backend.
+   - Frontend assets are built and uploaded to S3.
+3. **Deploy**:
+   - If the build and tests are successful:
+     - ECS service is updated with the new Docker image.
+     - S3 and CloudFront are updated with the new frontend assets.
+     - API Gateway updates (if any) are applied automatically.
+4. **Monitor and Rollback**:
+   - Monitor deployment through CloudWatch.
+   - Roll back if any issues are detected.
+
+By implementing this setup, you'll achieve a fully automated CI/CD pipeline that ensures your applications are always up to date with the latest changes, without the need for manual intervention. This setup also provides robust testing and monitoring, helping you catch and address issues early in the development process.
 
 ## Monitoring and Alerts
 
