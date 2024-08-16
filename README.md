@@ -2,50 +2,34 @@
 
 ## Project Overview
 
-The Weather App Microservices project is designed to deploy a weather application using a microservices architecture on AWS ECS with Docker. This project includes several services, including a Weather Data Service, a Basic Alert Service, and a frontend interface. The services interact with various AWS components like API Gateway, S3, SNS, and CloudWatch to provide real-time weather data, alerts, and user interfaces.
+The Weather App Microservices project is designed to deploy a weather application using a microservices architecture on AWS ECS with Docker. The project includes several services: the Weather Data Service for fetching weather data from the National Weather Service (NWS) API, a Basic Alert Service for sending notifications via Amazon SNS, and a frontend interface hosted on S3 and distributed via CloudFront. The services interact with AWS components like API Gateway, ECS, S3, SNS, and CloudWatch to deliver real-time weather data, alerts, and a user-friendly interface.
 
 ## Table of Contents
 
 1. [Project Overview](#project-overview)
-2. [Architecture](#architecture)
-   - [Microservices](#microservices)
-   - [AWS Services](#aws-services)
-   - [External Integration](#external-integration)
-3. [Installation](#installation)
+2. [Try it Out](#try-it-out)
+3. [Architecture](#architecture)
+4. [Installation](#installation)
    - [Prerequisites](#prerequisites)
    - [Environment Setup](#environment-setup)
    - [Service Deployment](#service-deployment)
-4. [Usage](#usage)
-5. [Configuration](#configuration)
-6. [Contributing](#contributing)
-7. [License](#license)
-8. [Contact Information](#contact-information)
-9. [Documentation for Microservices Architecture](#documentation-for-microservices-architecture)
-   - [Service Overview](#service-overview)
-   - [API Documentation](#api-documentation)
-   - [Architecture Diagrams](#architecture-diagrams)
-   - [Deployment Information](#deployment-information)
-   - [Inter-service Communication](#inter-service-communication)
-   - [Error Handling and Logging](#error-handling-and-logging)
-   - [Testing and Quality Assurance](#testing-and-quality-assurance)
-   - [Versioning and Compatibility](#versioning-and-compatibility)
-10. [DevOps Documentation Principles](#devops-documentation-principles)
-    - [CI/CD Pipelines](#cicd-pipelines)
-    - [Infrastructure as Code (IaC)](#infrastructure-as-code-iac)
-    - [Monitoring and Alerts](#monitoring-and-alerts)
-    - [Security Practices](#security-practices)
-    - [Disaster Recovery and Backup](#disaster-recovery-and-backup)
-    - [Environment Management](#environment-management)
-    - [Scaling and Performance](#scaling-and-performance)
-    - [Onboarding and Access](#onboarding-and-access)
-11. [Best Practices](#best-practices)
-    - [Clarity and Conciseness](#clarity-and-conciseness)
-    - [Consistency](#consistency)
-    - [Use of Visual Aids](#use-of-visual-aids)
-    - [Version Control](#version-control)
-    - [Accessibility](#accessibility)
-    - [Regular Updates](#regular-updates)
-12. [Tools and Formats](#tools-and-formats)
+5. [Usage](#usage)
+6. [Configuration](#configuration)
+7. [Contributing](#contributing)
+8. [License](#license)
+9. [Contact Information](#contact-information)
+10. [Architecture Diagrams](#architecture-diagrams)
+11. [Testing/Test Automation](#testingtest-automation)
+12. [CI/CD Pipelines](#cicd-pipelines)
+13. [Monitoring and Alerts](#monitoring-and-alerts)
+14. [Disaster Recovery and Backup](#disaster-recovery-and-backup)
+15. [Scaling and Performance](#scaling-and-performance)
+
+## Try it Out
+
+You can try out the live version of the web app using the following CloudFront link:
+
+**[Weather App on CloudFront](https://d1k9u4x5ouay71.cloudfront.net/)**
 
 ## Architecture
 
@@ -94,6 +78,7 @@ The Weather App Microservices project is designed to deploy a weather applicatio
 
 4. **Frontend Setup**:
    - Create a React application and configure it to interact with the backend API.
+   - Host the frontend on S3 and distribute it via CloudFront for global availability.
 
 ### Service Deployment
 
@@ -104,20 +89,22 @@ The Weather App Microservices project is designed to deploy a weather applicatio
 
 2. **Deploy Basic Alert Service**:
 
-   - Similarly, build and push Docker images and deploy the service.
+   - Build and push Docker images and deploy the service.
 
 3. **Frontend Deployment**:
 
    - Build the frontend and host it on S3.
+   - Configure CloudFront to distribute the content globally, ensuring low latency and high availability.
 
 4. **CI/CD Pipeline**:
    - Set up AWS CodePipeline to automate builds and deployments.
+   - Integrate with CodeBuild for building Docker images and deploying them to ECR.
 
 ## Usage
 
 - **Accessing the Frontend**:
 
-  - The frontend is hosted on S3 and accessible via a public URL.
+  - The frontend is hosted on S3 and accessible via a public URL distributed by CloudFront.
 
 - **Interacting with the API**:
 
@@ -125,14 +112,13 @@ The Weather App Microservices project is designed to deploy a weather applicatio
   - Example: `http://<api-gateway-url>/api/weather?lat=38.8894&lon=-77.0352`
 
 - **Monitoring and Alerts**:
-  - CloudWatch for logs and monitoring.
-  - SNS for alerts.
+  - Use CloudWatch for logs and monitoring, and SNS for sending alerts based on conditions.
 
 ## Configuration
 
 - **API Gateway Configuration**: Configure the API Gateway to route requests to the correct microservice.
-- **Environment Variables**: Use environment variables to manage configurations for different environments (development, staging, production).
-- **Docker Configuration**: Include configurations for Docker containers, such as exposed ports, environment variables, and volumes.
+- **Environment Variables**: Manage configurations for different environments (development, staging, production) using environment variables.
+- **Docker Configuration**: Configure Docker containers, including exposed ports, environment variables, and volumes.
 
 ## Contributing
 
@@ -148,147 +134,28 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 ## Contact Information
 
-For questions, comments, or support, contact [your-email@example.com].
+For questions, comments, or support, contact [gudivadarahul@gmail.com].
 
-## Documentation for Microservices Architecture
+## Architecture Diagrams
 
-### Service Overview
+_Coming soon_
 
-- **Weather Data Service**: Handles fetching and processing of weather data from external APIs.
-- **Basic Alert Service**: Monitors weather data and sends out notifications.
-- **API Gateway**: Acts as a single entry point for client requests and routes them to the appropriate microservice.
+## Testing/Test Automation
 
-### API Documentation
+_To be written_
 
-- **Weather Data Service**:
-  - **Endpoint**: `/api/weather`
-  - **Method**: `GET`
-  - **Parameters**: `lat` (latitude), `lon` (longitude)
-  - **Response**: JSON object containing weather data (temperature, forecast, etc.)
-  - **Example Call**:
-    ```bash
-    curl "http://localhost:5000/api/weather?lat=38.8894&lon=-77.0352"
-    ```
+## CI/CD Pipelines
 
-### Architecture Diagrams
+_To be written_
 
-Include architecture diagrams here to illustrate how the microservices interact with each other, databases, and external systems.
+## Monitoring and Alerts
 
-### Deployment Information
+_To be written_
 
-- **Infrastructure Requirements**: Describe the necessary infrastructure, including VPC, subnets, security groups, and load balancers.
-- **Docker Configurations**: Provide details on Dockerfile configurations for each microservice.
-- **Kubernetes YAML Files**: If applicable, include Kubernetes YAML files for deployment.
+## Disaster Recovery and Backup
 
-### Inter-service Communication
+_To be written_
 
-- **Communication Methods**: Describe how services communicate (e.g., REST, gRPC).
-- **Message Formats**: Detail the message formats used (e.g., JSON, Protocol Buffers).
-- **Error Handling**: Outline how errors are handled between services.
+## Scaling and Performance
 
-### Error Handling and Logging
-
-- **Error Management**: Describe how errors are managed within each service.
-- **Logging**: Provide logging guidelines and how logs can be accessed and interpreted.
-
-### Testing and Quality Assurance
-
-- **Unit Testing**: Include details on how to run unit tests for each service.
-- **Integration Testing**: Describe integration testing practices and tools used.
-- **End-to-End Testing**: Provide information on how to perform end-to-end tests.
-
-### Versioning and Compatibility
-
-- **Version Management**: Explain how versions are managed for each microservice.
-- **Backward Compatibility**: Detail how backward compatibility is maintained.
-
-## DevOps Documentation Principles
-
-### CI/CD Pipelines
-
-- **Tools Used**: Describe the CI/CD tools used (e.g., AWS CodePipeline).
-- **Pipeline Steps**: Provide details on the steps involved in the CI/CD pipeline.
-
-### Infrastructure as Code (IaC)
-
-- **Terraform/CloudFormation**: Describe how infrastructure is managed using Terraform or CloudFormation.
-- **Scripts**: Include scripts for provisioning and managing infrastructure.
-
-### Monitoring and Alerts
-
-- **Monitoring Setup**: Detail the monitoring setup (e.g., CloudWatch, Prometheus).
-- **Metrics Tracked**: List the metrics that are tracked and their thresholds.
-- **Alerts**: Describe the alerting mechanisms in place (e.g., SNS, Slack).
-
-### Security Practices
-
-- **IAM Roles**: Document the IAM roles and policies in place.
-- **Secrets Management**: Describe how secrets are managed (e.g., AWS Secrets Manager).
-- **Encryption**: Explain the encryption practices for data at rest and in transit.
-
-### Disaster Recovery and Backup
-
-- **Backup Strategies**: Describe the backup strategies in place, including frequency and retention policies.
-- **Restoration Procedures**: Provide procedures for restoring data from backups.
-
-### Environment Management
-
-- **Environment Configuration**: Detail how different environments (development, staging, production) are managed.
-- **Secrets Management**: Describe how secrets are handled in different environments.
-
-### Scaling and Performance
-
-- **Auto-scaling**: Document the auto-scaling configurations in place.
-- **Performance Testing**: Include details on how performance testing is conducted.
-
-### Onboarding and Access
-
-- **Onboarding Process**: Provide a step-by-step onboarding process for new team members.
-- **Access Management**: Detail how access to tools, environments, and repositories is managed.
-
-## Best Practices
-
-### Clarity and Conciseness
-
-- **Language**: Use simple and direct language.
-- **Avoid Jargon**: Avoid unnecessary jargon and ensure clarity in all sections.
-
-### Consistency
-
-- **Formatting**: Maintain consistent formatting throughout the documentation.
-- **Terminology**: Use consistent terminology to avoid confusion.
-
-### Use of Visual Aids
-
-- **Diagrams**: Include diagrams and flowcharts to clarify complex concepts.
-
-### Version Control
-
-- **Documentation Updates**: Ensure documentation is version-controlled alongside the code.
-
-### Accessibility
-
-- **Language**: Ensure the documentation is accessible to all users.
-- **Technical Levels**: Cater to different technical expertise levels.
-
-### Regular Updates
-
-- **Documentation Maintenance**: Regularly update the documentation to reflect changes in the codebase or architecture.
-
-## Tools and Formats
-
-### Markdown
-
-- **Usage**: Use Markdown as the standard for the README.
-
-### Documentation Generators
-
-- **Tools**: Consider using Docusaurus, MkDocs, or Sphinx for larger projects.
-
-### API Documentation Tools
-
-- **Tools**: Use Swagger, Postman, or Redoc for generating and maintaining API documentation.
-
-### Diagrams
-
-- **Tools**: Use Lucidchart, Draw.io, or Mermaid.js to create and embed diagrams.
+_To be written_
