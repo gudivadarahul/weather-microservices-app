@@ -37,7 +37,8 @@ phases:
 
       # Generate imagedefinitions.json file
       - echo Writing image definitions file...
-      - printf '[{"name":"weather-service","imageUri":"%s"}]' 221082212354.dkr.ecr.us-east-2.amazonaws.com/weather-backend:latest > imagedefinitions.json
+      - printf '[{"name":"weather-backend","imageUri":"%s"}]' 221082212354.dkr.ecr.us-east-2.amazonaws.com/weather-backend:latest > imagedefinitions.json
+
 artifacts:
   files:
     - "**/*"
