@@ -1,18 +1,37 @@
 version: 0.2
 
 phases:
+  install:
+    commands:
+      - echo Installing frontend dependencies...
+      - cd frontend
+      - npm install
+      - cd ..
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 221082212354.dkr.ecr.us-east-2.amazonaws.com
   build:
     commands:
+      # Build frontend
+      - echo Building frontend...
+      - cd frontend
+      - npm run build
+      - cd ..
+
+      # Build backend
       - echo Building backend Docker image...
       - cd backend
       - docker build -t weather-backend .
       - docker tag weather-backend:latest 221082212354.dkr.ecr.us-east-2.amazonaws.com/weather-backend:latest
+      - cd ..
   post_build:
     commands:
+      # Deploy frontend
+      - echo Syncing frontend with S3...
+      - aws s3 sync frontend/build/ s3://weather-info-app-frontend --delete
+
+      # Deploy backend
       - echo Pushing Docker image to ECR...
       - docker push 221082212354.dkr.ecr.us-east-2.amazonaws.com/weather-backend:latest
 artifacts:
