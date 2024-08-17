@@ -1,0 +1,19 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Installing frontend dependencies...
+      - cd frontend
+      - npm install
+  build:
+    commands:
+      - echo Building frontend...
+      - npm run build
+  post_build:
+    commands:
+      - echo Syncing frontend with S3...
+      - aws s3 sync build/ s3://weather-info-app-frontend --delete
+artifacts:
+  files:
+    - "**/*"

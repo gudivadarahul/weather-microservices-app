@@ -1,0 +1,20 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 221082212354.dkr.ecr.us-east-2.amazonaws.com
+  build:
+    commands:
+      - echo Building backend Docker image...
+      - cd backend
+      - docker build -t weather-backend .
+      - docker tag weather-backend:latest 221082212354.dkr.ecr.us-east-2.amazonaws.com/weather-backend:latest
+  post_build:
+    commands:
+      - echo Pushing Docker image to ECR...
+      - docker push 221082212354.dkr.ecr.us-east-2.amazonaws.com/weather-backend:latest
+artifacts:
+  files:
+    - "**/*"
