@@ -3,13 +3,16 @@ pipeline {
 
     environment {
         AWS_REGION = 'us-east-2'
-        ECR_REPO = '221082212354.dkr.ecr.us-east-2.amazonaws.com/weather-backend:latest' 
-        DOCKER_IMAGE = "${ECR_REPO}:latest"
+        ECR_REPO = '221082212354.dkr.ecr.us-east-2.amazonaws.com/weather-backend:latest'
+        S3_BUCKET = 'weather-info-app-frontend' 
+        DISTRIBUTION_ID = 'E2JPFHE3VYJCK4' 
+        DOCKER_IMAGE = "${ECR_REPO}"
     }
 
     stages {
         stage('Checkout') {
             steps {
+                // Clone the repository
                 git branch: 'main', url: 'https://github.com/gudivadarahul/weather-microservices-app' 
             }
         }
@@ -23,8 +26,6 @@ pipeline {
                     sh 'npm run lint'
                     // Build the frontend assets
                     sh 'npm run build'
-                    // Archive the build artifacts (optional)
-                    archiveArtifacts artifacts: 'dist/**', fingerprint: true
                 }
             }
         }
@@ -44,6 +45,34 @@ pipeline {
                         // Push the Docker image to ECR
                         sh "docker push ${DOCKER_IMAGE}"
                     }
+                }
+            }
+        }
+
+        stage('Frontend Deployment') {
+            steps {
+                dir('frontend') {
+                    script {
+                        // Upload the build files to S3
+                        sh "aws s3 sync dist/ s3://${S3_BUCKET} --delete"
+                        
+                        // Invalidate CloudFront to serve the latest frontend
+                        sh """
+                        aws cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths "/*"
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Backend Deployment') {
+            steps {
+                script {
+                    // Update ECS service to use the new Docker image
+                    sh """
+                    aws ecs update-service --cluster your-ecs-cluster-name --service your-ecs-service-name \
+                    --force-new-deployment --region ${AWS_REGION}
+                    """
                 }
             }
         }
