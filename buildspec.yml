@@ -34,6 +34,11 @@ phases:
       # Deploy backend
       - echo Pushing Docker image to ECR...
       - docker push 221082212354.dkr.ecr.us-east-2.amazonaws.com/weather-backend:latest
+
+      # Generate imagedefinitions.json file
+      - echo Writing image definitions file...
+      - printf '[{"name":"weather-service","imageUri":"%s"}]' 221082212354.dkr.ecr.us-east-2.amazonaws.com/weather-backend:latest > imagedefinitions.json
 artifacts:
   files:
     - "**/*"
+    - imagedefinitions.json
