@@ -17,12 +17,17 @@ pipeline {
             }
         }
 
-        stage('Install Node.js and npm') {
+        stage('Install Node.js and npm (macOS)') {
+            when {
+                expression { isUnix() }
+            }
             steps {
-                // Install Node.js and npm
+                // Install Node.js and npm using Homebrew on macOS
                 sh '''
-                curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
-                sudo apt-get install -y nodejs
+                if ! type node > /dev/null 2>&1; then
+                    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+                    brew install node
+                fi
                 '''
             }
         }
