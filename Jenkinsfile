@@ -17,6 +17,16 @@ pipeline {
             }
         }
 
+        stage('Install Node.js and npm') {
+            steps {
+                // Install Node.js and npm
+                sh '''
+                curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
+                sudo apt-get install -y nodejs
+                '''
+            }
+        }
+
         stage('Frontend Build') {
             steps {
                 dir('frontend') {
