@@ -29,7 +29,7 @@ phases:
     commands:
       # Deploy frontend
       - echo Syncing frontend with S3...
-      - aws s3 sync frontend/build/ s3://weather-info-app-frontend --delete
+      - aws s3 sync frontend/dist/ s3://weather-info-app-frontend --delete
 
       # Deploy backend
       - echo Pushing Docker image to ECR...
