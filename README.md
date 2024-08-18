@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-The Weather App Microservices project is designed to deploy a weather application using a microservices architecture on AWS ECS with Docker. The project includes several services: the Weather Data Service for fetching weather data from the National Weather Service (NWS) API, a Basic Alert Service for sending notifications via Amazon SNS, and a frontend interface hosted on S3 and distributed via CloudFront. The services interact with AWS components like API Gateway, ECS, S3, SNS, and CloudWatch to deliver real-time weather data, alerts, and a user-friendly interface.
+The Weather App Microservices project is designed to deploy a weather application using a microservices architecture on AWS ECS with Docker. The project includes a Weather Data Service for fetching weather data from the National Weather Service (NWS) API, and a frontend interface hosted on S3. The services interact with AWS components like API Gateway, ECS, S3, and CloudWatch to deliver real-time weather data and a user-friendly interface.
 
 ## Table of Contents
 
@@ -19,31 +19,38 @@ The Weather App Microservices project is designed to deploy a weather applicatio
 8. [License](#license)
 9. [Contact Information](#contact-information)
 10. [Architecture Diagrams](#architecture-diagrams)
-11. [Testing/Test Automation](#testingtest-automation)
-12. [CI/CD Pipelines](#cicd-pipelines)
-13. [Monitoring and Alerts](#monitoring-and-alerts)
-14. [Disaster Recovery and Backup](#disaster-recovery-and-backup)
-15. [Scaling and Performance](#scaling-and-performance)
 
 ## Try it Out
 
-You can try out the live version of the web app using the following CloudFront link:
+You can try out the live version of the web app using the following S3 link:
 
-**[Weather App on CloudFront](https://d1k9u4x5ouay71.cloudfront.net/)**
+**[Weather App on S3](http://weather-info-app-frontend.s3-website.us-east-2.amazonaws.com/)**
 
 ## Architecture
+
+### Architecture Diagram
+
+The following diagram illustrates the high-level architecture of our Weather App Microservices:
+
+<script src="https://gist.github.com/gudivadarahul/7236ed4392f12e7fd609d865ea19838a.js"></script>
+
+This diagram showcases the key components of our weather application, including:
+
+- Frontend hosted on S3
+- API Gateway for managing and routing requests
+- ECS Fargate clusters running our microservices
+- CI/CD pipeline for automated deployments
+- CloudWatch for monitoring and logging
 
 ### Microservices
 
 - **Weather Data Service**: Fetches weather data from the National Weather Service (NWS) API and provides it via a RESTful API.
-- **Basic Alert Service**: Monitors weather data and sends notifications via Amazon SNS based on predefined conditions.
 - **API Gateway**: Manages and routes requests to the appropriate microservice, handling integration with ECS services.
 
 ### AWS Services
 
 - **ECS**: Manages Docker containers with Fargate for serverless container management.
 - **S3**: Hosts static assets for the frontend.
-- **SNS**: Sends notifications via email or SMS.
 - **CloudWatch**: Monitors and logs ECS tasks.
 
 ### External Integration
@@ -70,15 +77,15 @@ You can try out the live version of the web app using the following CloudFront l
 2. **ECS Setup**:
 
    - Create an ECS cluster using Fargate.
-   - Define and deploy the task definitions for Weather Data Service and Alert Service.
+   - Define and deploy the task definitions for Weather Data Service.
 
 3. **ECR Setup**:
 
-   - Create ECR repositories for each microservice.
+   - Create ECR repositories for the backend microservice.
 
 4. **Frontend Setup**:
    - Create a React application and configure it to interact with the backend API.
-   - Host the frontend on S3 and distribute it via CloudFront for global availability.
+   - Host the frontend on S3.
 
 ### Service Deployment
 
@@ -87,32 +94,23 @@ You can try out the live version of the web app using the following CloudFront l
    - Build and push Docker images to ECR.
    - Deploy the service using ECS and configure networking.
 
-2. **Deploy Basic Alert Service**:
-
-   - Build and push Docker images and deploy the service.
-
-3. **Frontend Deployment**:
+2. **Frontend Deployment**:
 
    - Build the frontend and host it on S3.
-   - Configure CloudFront to distribute the content globally, ensuring low latency and high availability.
 
-4. **CI/CD Pipeline**:
-   - Set up AWS CodePipeline to automate builds and deployments.
-   - Integrate with CodeBuild for building Docker images and deploying them to ECR.
+3. **CI/CD Pipeline**:
+   - Set up AWS CodePipeline to automate builds and deployments for both frontend and backend.
 
 ## Usage
 
 - **Accessing the Frontend**:
 
-  - The frontend is hosted on S3 and accessible via a public URL distributed by CloudFront.
+  - The frontend is hosted on S3 and accessible via a public URL.
 
 - **Interacting with the API**:
 
   - Use the API Gateway to route requests to the appropriate microservice.
-  - Example: `http://<api-gateway-url>/api/weather?lat=38.8894&lon=-77.0352`
-
-- **Monitoring and Alerts**:
-  - Use CloudWatch for logs and monitoring, and SNS for sending alerts based on conditions.
+  - Example: `http://<api-gateway-url>/weather?lat=38.8894&lon=-77.0352`
 
 ## Configuration
 
@@ -140,112 +138,19 @@ For questions, comments, or support, contact [gudivadarahul@gmail.com].
 
 _Coming soon_
 
-## Testing/Test Automation
-
-_To be written_
-
 ## CI/CD Pipelines
 
-### Currently Working On...
+### CI/CD Workflow
 
-To streamline your development process and ensure that changes to your frontend and backend are automatically tested and deployed without manual intervention, you can set up a CI/CD pipeline using AWS CodePipeline, CodeBuild, and other AWS services. Here’s how you can achieve this:
+To streamline the development process and ensure that changes to your frontend and backend are automatically deployed, we have set up a CI/CD pipeline using AWS CodePipeline, CodeBuild, and other AWS services:
 
-### Step 1: Set Up a CI/CD Pipeline
+- **Pipeline Stages**:
 
-#### Use AWS CodePipeline
+  1. **Source Stage**: Pulls code from the GitHub repository.
+  2. **Build Stage**: Builds the frontend and backend. The frontend is built using Vite, and the backend is containerized using Docker.
+  3. **Deploy Frontend**: Syncs the built frontend assets to the S3 bucket.
+  4. **Deploy Backend**: Deploys the new Docker image to ECS, automatically updating the service.
 
-AWS CodePipeline automates the build, test, and deployment phases of your release process:
-
-- **Pipeline Setup**: Create a new pipeline that triggers whenever there are changes to your GitHub repository (frontend or backend).
-
-#### Configure AWS CodeBuild
-
-Use AWS CodeBuild to automatically build your frontend and backend, ensuring that your code is tested and validated before deployment.
-
-- **For the Frontend**:
-  - Install dependencies.
-  - Run tests (e.g., using a testing framework like Jest for React).
-  - Build the static assets (e.g., using `npm run build`).
-  - Upload the built assets to S3.
-- **For the Backend**:
-  - Build the Docker image.
-  - Run tests (e.g., unit tests, integration tests).
-  - Push the Docker image to AWS Elastic Container Registry (ECR).
-
-#### Deploy Automatically
-
-- **For the Frontend**:
-
-  - After a successful build, deploy static files to AWS S3.
-  - Invalidate the CloudFront cache to ensure the latest files are served to users.
-
-- **For the Backend**:
-
-  - After pushing the Docker image to ECR, configure AWS ECS to automatically update the running service with the new image.
-
-- **For the API Gateway**:
-  - Use AWS CloudFormation or Terraform to automatically apply any changes to API Gateway configurations.
-
-### Step 2: Automate the Process
-
-#### Automate S3 Deployment
-
-- Use AWS CodePipeline to automate the deployment of frontend assets to S3 after a successful build, eliminating the need for manual uploads.
-
-#### Automate ECS Deployment
-
-- Configure the ECS service to automatically pull the latest Docker image from ECR once updated.
-
-#### Automate API Gateway Updates
-
-- Use Infrastructure as Code (IaC) tools like AWS CloudFormation or Terraform to manage API Gateway configurations. Ensure that API Gateway updates are included in your CI/CD pipeline so changes are applied automatically.
-
-### Step 3: Test the Changes
-
-#### Run Automated Tests
-
-- Run automated tests for both frontend and backend before deployment. This ensures that errors are caught early and prevents breaking changes from being deployed.
-
-#### Set Up Staging Environments
-
-- Deploy your changes to a staging environment before going live. This allows you to test the entire flow (frontend, backend, API Gateway) in an environment similar to production.
-
-### Step 4: Monitor and Rollback
-
-#### Monitor Deployments
-
-- Use AWS CloudWatch to monitor deployments and ensure everything is working as expected. Set up alerts for any errors or issues during the deployment process.
-
-#### Rollback Strategy
-
-- In case of deployment failures, configure the pipeline to automatically rollback to the previous stable version.
-
-### Example Workflow
-
-1. **Commit Changes**: Changes are committed to GitHub (frontend or backend).
-2. **Trigger Pipeline**: AWS CodePipeline triggers the build process:
-   - CodeBuild runs tests and builds the project.
-   - Docker image is built and pushed to ECR for the backend.
-   - Frontend assets are built and uploaded to S3.
-3. **Deploy**:
-   - If the build and tests are successful:
-     - ECS service is updated with the new Docker image.
-     - S3 and CloudFront are updated with the new frontend assets.
-     - API Gateway updates (if any) are applied automatically.
-4. **Monitor and Rollback**:
-   - Monitor deployment through CloudWatch.
-   - Roll back if any issues are detected.
-
-By implementing this setup, you'll achieve a fully automated CI/CD pipeline that ensures your applications are always up to date with the latest changes, without the need for manual intervention. This setup also provides robust testing and monitoring, helping you catch and address issues early in the development process.
-
-## Monitoring and Alerts
-
-_To be written_
-
-## Disaster Recovery and Backup
-
-_To be written_
-
-## Scaling and Performance
-
-_To be written_
+- **Key Points**:
+  - The ALB is used to route traffic to the ECS service, ensuring that changes in task IPs do not affect the API Gateway.
+  - The pipeline ensures that both the frontend and backend are always up to date with the latest changes pushed to the repository.
